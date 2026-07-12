@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CiberSeguridadFácil — Empieza tu formación</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy-950:#0a1628;
+    --navy-900:#0f1f35;
+    --navy-800:#16304c;
+    --navy-700:#1c3a5c;
+    --teal-400:#4dd9c5;
+    --cyan-400:#5ad1e8;
+    --ink-100:#eef4f8;
+    --ink-300:#9fb3c8;
+    --ink-500:#6c84a0;
+    --danger:#ff6b6b;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--navy-950);
+    color:var(--ink-100);
+    font-family:'Inter',sans-serif;
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+  }
+  a{color:inherit;text-decoration:none;}
+
+  .bg-grid{
+    position:fixed; inset:0; z-index:0; pointer-events:none;
+    background-image:
+      radial-gradient(circle at 78% 18%, rgba(90,209,232,0.16), transparent 38%),
+      radial-gradient(circle at 8% 85%, rgba(77,217,197,0.10), transparent 40%),
+      linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+    background-size: auto, auto, 42px 42px, 42px 42px;
+  }
+
+  header{
+    position:relative; z-index:2;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 6vw;
+    border-bottom:1px solid rgba(255,255,255,0.06);
+  }
+  .brand{display:flex; align-items:center; gap:12px;}
+  .brand img{height:52px; width:52px; border-radius:50%; display:block;}
+
+  .progress{
+    display:flex; align-items:center; gap:6px;
+    font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--ink-500);
+  }
+  .progress .dot{
+    width:6px; height:6px; border-radius:50%;
+    background:var(--navy-700);
+    transition:all .3s;
+  }
+  .progress .dot.active{background:var(--teal-400); width:16px; border-radius:3px;}
+  .progress .dot.done{background:var(--cyan-400); opacity:0.6;}
+  .progress-label{margin-left:4px;}
+  @media (max-width:640px){ .progress-label{display:none;} }
+
+  main{
+    position:relative; z-index:1;
+    display:grid; grid-template-columns: 1fr 1fr; align-items:center;
+    gap:48px;
+    padding:56px 6vw 48px;
+    max-width:1320px; margin:0 auto;
+  }
+  @media (max-width: 880px){
+    main{grid-template-columns:1fr; padding-top:36px;}
+    .visual{order:-1;}
+  }
+
+  .copy{max-width:520px;}
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:'JetBrains Mono',monospace; font-size:12.5px; color:var(--teal-400);
+    letter-spacing:0.5px; margin-bottom:22px;
+  }
+  .eyebrow::before{content:'>_';}
+  .eyebrow .cursor{
+    width:7px; height:14px; background:var(--teal-400);
+    animation:blink 1.1s step-end infinite;
+  }
+  @keyframes blink{ 50%{opacity:0;} }
+
+  h1{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:clamp(28px, 3.4vw, 40px);
+    line-height:1.16; font-weight:700; letter-spacing:-0.5px;
+    margin:0 0 16px;
+  }
+  h1 .accent{color:var(--cyan-400);}
+
+  .lead{
+    font-size:16.5px; line-height:1.6; color:var(--ink-300);
+    max-width:480px; margin:0 0 28px;
+  }
+
+  .step{display:none; animation:fadeUp .35s ease;}
+  .step.active{display:block;}
+  @keyframes fadeUp{from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);}}
+
+  /* ---------- Selector Telegram (píldoras integradas en el formulario) ---------- */
+  .telegram-question{
+    font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:14px;
+    color:var(--ink-100); margin:0 0 10px;
+  }
+  .pill-group{display:flex; gap:10px; max-width:430px; margin-bottom:20px;}
+  .pill{
+    flex:1; display:flex; flex-direction:column; align-items:flex-start; gap:2px;
+    padding:13px 16px; border-radius:10px;
+    border:1.5px solid var(--navy-700);
+    background:var(--navy-900);
+    cursor:pointer; transition:border-color .2s, background .2s;
+  }
+  .pill strong{font-family:'Space Grotesk',sans-serif; font-size:13.5px; color:var(--ink-100);}
+  .pill span{font-size:11.5px; color:var(--ink-500);}
+  .pill.selected{
+    border-color:var(--teal-400);
+    background:rgba(77,217,197,0.1);
+  }
+  .pill.selected strong{color:var(--teal-400);}
+  .pill-error{
+    display:none; color:var(--danger); font-size:12.5px; margin:-12px 0 16px;
+  }
+  .pill-error.show{display:block;}
+
+  /* ---------- Form ---------- */
+  form{display:flex; flex-direction:column; gap:14px; max-width:430px;}
+  .field{position:relative;}
+  .field input{
+    width:100%; padding:16px 18px;
+    background:rgba(255,255,255,0.03);
+    border:1.5px solid var(--navy-800);
+    border-radius:10px;
+    color:var(--ink-100); font-size:15px; font-family:'Inter',sans-serif;
+    transition:border-color .2s, box-shadow .2s;
+  }
+  .field input::placeholder{color:var(--ink-500);}
+  .field input:focus{
+    outline:none; border-color:var(--teal-400);
+    box-shadow:0 0 0 4px rgba(77,217,197,0.12);
+  }
+  .field small{
+    display:none; color:var(--danger); font-size:12.5px; margin-top:5px;
+  }
+  .field.error input{border-color:var(--danger);}
+  .field.error small{display:block;}
+
+  button[type="submit"], .btn-primary{
+    position:relative;
+    margin-top:6px; padding:17px 24px;
+    background:linear-gradient(135deg, var(--teal-400), var(--cyan-400));
+    border:none; border-radius:10px;
+    color:#08131f; font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:15px;
+    letter-spacing:0.2px; cursor:pointer;
+    box-shadow:0 0 0 0 rgba(90,209,232,0.5);
+    transition:transform .15s, box-shadow .4s;
+  }
+  button[type="submit"]:hover, .btn-primary:hover{transform:translateY(-1px); box-shadow:0 6px 24px rgba(90,209,232,0.25);}
+  button[type="submit"]:disabled{opacity:0.6; cursor:wait; transform:none;}
+  button[type="submit"].pulse{animation:pulse 1.8s ease-out infinite;}
+  @keyframes pulse{
+    0%{box-shadow:0 0 0 0 rgba(90,209,232,0.45);}
+    70%{box-shadow:0 0 0 14px rgba(90,209,232,0);}
+    100%{box-shadow:0 0 0 0 rgba(90,209,232,0);}
+  }
+
+  .form-note{font-size:12.5px; color:var(--ink-500); margin-top:2px;}
+
+  .privacy-block{
+    max-width:430px; margin-top:18px;
+    border:1px solid rgba(77,217,197,0.25);
+    border-radius:12px; padding:18px 20px;
+    background:rgba(77,217,197,0.04);
+  }
+  .privacy-title{
+    display:flex; align-items:center; gap:8px;
+    margin:0 0 12px; font-size:13.5px; font-weight:600; color:var(--teal-400);
+  }
+  .privacy-title svg{width:15px; height:15px; flex-shrink:0;}
+  .step-list{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:10px;}
+  .step-list li{display:flex; align-items:flex-start; gap:10px; font-size:12.5px; line-height:1.55; color:var(--ink-300);}
+  .step-num{
+    flex-shrink:0; width:19px; height:19px; border-radius:50%; margin-top:1px;
+    background:rgba(77,217,197,0.15); color:var(--teal-400);
+    font-family:'JetBrains Mono',monospace; font-size:10.5px; font-weight:600;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .step-list em{color:var(--ink-100); font-style:normal; font-weight:600;}
+
+  .secure-badge{
+    display:inline-flex; align-items:center; gap:7px;
+    font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--ink-500);
+    letter-spacing:0.3px; margin-top:16px;
+  }
+  .secure-badge svg{flex-shrink:0; width:14px; height:14px;}
+
+  /* ---------- Download step (no-Telegram branch) ---------- */
+  .download-card{
+    display:flex; align-items:center; gap:16px;
+    max-width:430px; padding:20px;
+    border-radius:14px; border:1.5px solid var(--teal-400);
+    background:rgba(77,217,197,0.06); margin-bottom:16px;
+  }
+  .download-icon{
+    flex-shrink:0; width:48px; height:48px; border-radius:12px;
+    background:linear-gradient(135deg, var(--teal-400), var(--cyan-400));
+    display:flex; align-items:center; justify-content:center; color:#08131f;
+  }
+  .download-icon svg{width:24px; height:24px;}
+  .download-text strong{display:block; font-family:'Space Grotesk',sans-serif; font-size:14.5px; margin-bottom:3px;}
+  .download-text span{font-size:12.5px; color:var(--ink-300);}
+  .btn-secondary{
+    display:inline-flex; align-items:center; gap:8px;
+    max-width:430px; width:100%; padding:15px 20px; margin-bottom:20px;
+    border:1.5px solid var(--navy-700); border-radius:10px;
+    justify-content:center;
+    font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:14px;
+    color:var(--ink-100); transition:border-color .2s, background .2s;
+  }
+  .btn-secondary:hover{border-color:var(--teal-400); background:rgba(77,217,197,0.05);}
+
+  /* ---------- Result panel ---------- */
+  .result-card{
+    max-width:460px;
+    border:1.5px solid var(--teal-400);
+    border-radius:14px;
+    padding:24px;
+    background:rgba(77,217,197,0.06);
+    margin-bottom:16px;
+  }
+  .result-card > p:first-child{margin:0 0 16px; font-size:15.5px; color:var(--ink-100);}
+  .result-card strong{color:var(--teal-400);}
+
+  .accompaniment{list-style:none; margin:0 0 18px; padding:0; display:flex; flex-direction:column; gap:10px;}
+  .accompaniment li{display:flex; align-items:flex-start; gap:10px; font-size:13.5px; line-height:1.5; color:var(--ink-300);}
+  .accompaniment .step-num{background:rgba(90,209,232,0.15); color:var(--cyan-400);}
+  .accompaniment em{color:var(--ink-100); font-style:normal; font-weight:600;}
+
+  .btn-telegram{
+    display:flex; align-items:center; justify-content:center; gap:10px;
+    width:100%; padding:16px;
+    background:linear-gradient(135deg, var(--teal-400), var(--cyan-400));
+    border-radius:10px; color:#08131f;
+    font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:15px;
+  }
+
+  .duplicate-note{margin:12px 0 0; font-size:12px; color:var(--ink-500); font-style:italic;}
+
+  .email-note{
+    display:flex; align-items:flex-start; gap:9px;
+    max-width:460px; margin:0 0 16px; padding:13px 16px;
+    border-radius:10px; background:rgba(255,255,255,0.03);
+    font-size:12.5px; line-height:1.5; color:var(--ink-300);
+  }
+  .email-note svg{flex-shrink:0; width:16px; height:16px; color:var(--teal-400); margin-top:1px;}
+
+  .error-banner{
+    display:none; max-width:460px; align-items:flex-start; gap:10px;
+    padding:14px 16px; margin-bottom:16px;
+    border:1.5px solid var(--danger); border-radius:10px;
+    background:rgba(255,107,107,0.08); font-size:13px; line-height:1.5; color:var(--ink-100);
+  }
+  .error-banner.show{display:flex;}
+  .error-banner svg{flex-shrink:0; width:16px; height:16px; color:var(--danger); margin-top:1px;}
+
+  .edit-link{
+    display:inline-flex; align-items:center; gap:6px;
+    margin-top:18px; font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--ink-500);
+    cursor:pointer; background:none; border:none; padding:0;
+  }
+  .edit-link:hover{color:var(--teal-400);}
+  .edit-link svg{width:13px; height:13px;}
+
+  /* ---------- Visual column ---------- */
+  .visual{position:relative; display:flex; justify-content:center;}
+  .visual-frame{
+    position:relative; width:100%; max-width:440px; aspect-ratio:4/5;
+    border-radius:20px; overflow:hidden;
+    background:linear-gradient(160deg, var(--navy-900), var(--navy-950));
+    border:1px solid rgba(255,255,255,0.06);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .visual-frame img{width:100%; height:100%; object-fit:cover; display:block;}
+
+  footer{
+    position:relative; z-index:1;
+    text-align:center; padding:26px 6vw 32px;
+    font-size:12.5px; color:var(--ink-500);
+    border-top:1px solid rgba(255,255,255,0.06);
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .cursor, button[type="submit"].pulse{animation:none;}
+    .step{animation:none;}
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-grid"></div>
+
+<header>
+  <div class="brand">
+    <img src="logo-ciberfacil.png" alt="CiberSeguridadFácil — María Reina">
+  </div>
+  <div class="progress" id="progress">
+    <span class="dot active" data-step="0"></span>
+    <span class="dot" data-step="1"></span>
+    <span class="progress-label" id="progressLabel">Paso 1 de 2</span>
+  </div>
+</header>
+
+<main>
+  <section class="copy">
+    <div class="eyebrow">Acceso a tu formación<span class="cursor"></span></div>
+    <h1 id="pageH1">Sergei ya tiene tus datos. <span class="accent">¿Sabrás pararle los pies?</span></h1>
+    <p class="lead" id="pageLead">
+      Regístrate y empieza a detectar sus trucos en menos de 3 minutos al día, directo en Telegram.
+    </p>
+
+    <!-- ============ STEP 0: Formulario único (nombre, email, Telegram) ============ -->
+    <div class="step active" id="step0">
+      <p class="telegram-question">¿Tienes Telegram instalado en tu móvil?</p>
+      <div class="pill-group">
+        <button type="button" class="pill" id="pillSi" data-value="si">
+          <strong>Sí, ya lo tengo</strong>
+          <span>Entro directo</span>
+        </button>
+        <button type="button" class="pill" id="pillNo" data-value="no">
+          <strong>No, todavía no</strong>
+          <span>Me ayudáis a instalarlo</span>
+        </button>
+      </div>
+      <p class="pill-error" id="pillError">Selecciona una opción para continuar.</p>
+
+      <form id="leadForm" novalidate>
+        <div class="field" id="field-nombre">
+          <input type="text" id="nombre" name="nombre" placeholder="Tu nombre" autocomplete="name">
+          <small>Escribe tu nombre para continuar.</small>
+        </div>
+        <div class="field" id="field-email">
+          <input type="email" id="email" name="email" placeholder="Tu email de trabajo" autocomplete="email">
+          <small>Escribe un email válido.</small>
+        </div>
+        <button type="submit" id="submitBtn">Quiero empezar →</button>
+        <p class="form-note">No vendemos ni compartimos tus datos. Puedes darte de baja cuando quieras.</p>
+        <div class="secure-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M12 2 4 5v6c0 5 3.5 8.5 8 11 4.5-2.5 8-6 8-11V5l-8-3z"/>
+            <path d="M9 12l2 2 4-4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Conexión segura · enlaces oficiales verificados
+        </div>
+      </form>
+    </div>
+
+    <!-- ============ STEP 1: Resultado (dos variantes) ============ -->
+    <div class="step" id="step1">
+      <div class="error-banner" id="errorBanner">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v5" stroke-linecap="round"/><path d="M12 16h.01" stroke-linecap="round"/></svg>
+        <span id="errorMessage">No se pudo completar el registro. Inténtalo de nuevo en unos segundos.</span>
+      </div>
+
+      <!-- Rama SIN Telegram: paso de descarga primero -->
+      <div id="downloadStep" style="display:none;">
+        <div class="download-card">
+          <div class="download-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7z"/></svg>
+          </div>
+          <div class="download-text">
+            <strong>Instala Telegram</strong>
+            <span>Gratis, tarda menos de un minuto</span>
+          </div>
+        </div>
+        <a class="btn-secondary" id="downloadLink" href="https://telegram.org/dl/" target="_blank" rel="noopener">
+          Descargar Telegram →
+        </a>
+
+        <div class="privacy-block">
+          <p class="privacy-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2 4 5v6c0 5 3.5 8.5 8 11 4.5-2.5 8-6 8-11V5l-8-3z"/><path d="M9 12l2 2 4-4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Antes de continuar: oculta tu número
+          </p>
+          <ul class="step-list">
+            <li><span class="step-num">1</span> Abre Telegram por primera vez y termina la instalación.</li>
+            <li><span class="step-num">2</span> Ve a <em>Ajustes → Privacidad y seguridad → Número de teléfono</em>.</li>
+            <li><span class="step-num">3</span> Elige <em>"Nadie"</em> — así decides tú quién puede verlo. No lo necesitas para el curso.</li>
+          </ul>
+        </div>
+
+        <button type="button" class="btn-primary" id="continueToTelegramBtn" style="width:100%; margin-top:16px;">
+          Ya lo tengo instalado, continuar →
+        </button>
+      </div>
+
+      <!-- Tarjeta final: acceso al bot -->
+      <div id="finalStep">
+        <div class="result-card">
+          <p>¡Listo, <strong id="resultNombre">campeón</strong>! Ya casi estás dentro.</p>
+          <ol class="accompaniment">
+            <li><span class="step-num">1</span> Pulsa el botón de abajo para abrir el bot en Telegram.</li>
+            <li><span class="step-num">2</span> El sistema te reconocerá automáticamente — no hace falta escribir ningún código.</li>
+            <li><span class="step-num">3</span> Ahí empieza tu partida contra Sergei, paso a paso.</li>
+          </ol>
+          <a class="btn-telegram" id="telegramBtn" href="#" target="_blank" rel="noopener">
+            Abrir CiberSeguridadFácil en Telegram →
+          </a>
+          <p class="duplicate-note" id="duplicateNote" style="display:none;">
+            Ya tenías una inscripción registrada — no te preocupes, puedes entrar igualmente.
+          </p>
+        </div>
+
+        <div class="email-note">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16v16H4z" stroke-linejoin="round"/><path d="m4 6 8 7 8-7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>También te hemos enviado este enlace por email, por si cierras esta página antes de pulsar el botón.</span>
+        </div>
+
+        <div class="privacy-block" id="postFormPrivacy">
+          <p class="privacy-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2 4 5v6c0 5 3.5 8.5 8 11 4.5-2.5 8-6 8-11V5l-8-3z"/><path d="M9 12l2 2 4-4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Recuerda: tu privacidad en Telegram
+          </p>
+          <ul class="step-list">
+            <li><span class="step-num">1</span> No necesitas compartir tu número de teléfono para hacer este curso.</li>
+            <li><span class="step-num">2</span> Si no lo has hecho ya, ve a <em>Ajustes → Privacidad y seguridad → Número de teléfono</em>.</li>
+            <li><span class="step-num">3</span> Elige <em>"Nadie"</em> — así decides tú quién puede verlo.</li>
+          </ul>
+        </div>
+
+        <button type="button" class="edit-link" id="editDataBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+          ¿Te has equivocado en algún dato? Edítalo aquí
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <section class="visual">
+    <div class="visual-frame">
+      <img src="sergei-landing.png" alt="Sergei, el personaje que representa las amenazas de ciberseguridad del curso">
+    </div>
+  </section>
+</main>
+
+<footer>
+  © CiberSeguridadFácil by María Reina. Todos los derechos reservados.
+</footer>
+
+<script>
+  // ⚠️ URL del backend de Apps Script (documento de control multi-institución)
+  const WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbxAbfiMFZHBfTk0s0kxiReRBLkJT2HIRSRDe6X6f9HrAiwiKWmKYQc1WXYa3YcMRSqpfA/exec";
+
+  const COPY = {
+    inicio: {
+      h1: 'Sergei ya tiene tus datos. <span class="accent">¿Sabrás pararle los pies?</span>',
+      lead: 'Regístrate y empieza a detectar sus trucos en menos de 3 minutos al día, directo en Telegram.'
+    },
+    resultado_descarga: {
+      h1: 'Un último paso <span class="accent">antes de empezar</span>',
+      lead: 'Instala Telegram y sigue las recomendaciones de privacidad — luego te llevamos directo al curso.'
+    },
+    resultado_final: {
+      h1: '¡Todo listo para <span class="accent">enfrentarte a Sergei!</span>',
+      lead: 'Un último clic y entras directo a tu formación en Telegram.'
+    }
+  };
+
+  const pageH1 = document.getElementById('pageH1');
+  const pageLead = document.getElementById('pageLead');
+  function setCopy(key){
+    pageH1.innerHTML = COPY[key].h1;
+    pageLead.textContent = COPY[key].lead;
+  }
+
+  const params = new URLSearchParams(window.location.search);
+  const orgId = params.get('org');
+
+  let tieneTelegram = null;
+
+  const step0 = document.getElementById('step0');
+  const step1 = document.getElementById('step1');
+  const dots = document.querySelectorAll('.progress .dot');
+  const progressLabel = document.getElementById('progressLabel');
+
+  const pillSi = document.getElementById('pillSi');
+  const pillNo = document.getElementById('pillNo');
+  const pillError = document.getElementById('pillError');
+
+  const form = document.getElementById('leadForm');
+  const submitBtn = document.getElementById('submitBtn');
+  const resultNombre = document.getElementById('resultNombre');
+  const duplicateNote = document.getElementById('duplicateNote');
+  const telegramBtn = document.getElementById('telegramBtn');
+  const errorBanner = document.getElementById('errorBanner');
+  const errorMessage = document.getElementById('errorMessage');
+  const downloadStep = document.getElementById('downloadStep');
+  const finalStep = document.getElementById('finalStep');
+
+  if (!orgId) {
+    document.querySelector('.copy').innerHTML =
+      '<div class="eyebrow">Enlace no válido<span class="cursor"></span></div>' +
+      '<h1>Este enlace de inscripción no es correcto.</h1>' +
+      '<p class="lead">Pide a tu organización el enlace oficial de inscripción para continuar. (Para pruebas, añade <code>?org=test</code> al final de la URL.)</p>';
+  }
+
+  function seleccionarPill(valor){
+    tieneTelegram = valor === 'si';
+    pillSi.classList.toggle('selected', valor === 'si');
+    pillNo.classList.toggle('selected', valor === 'no');
+    pillError.classList.remove('show');
+  }
+  pillSi.addEventListener('click', () => seleccionarPill('si'));
+  pillNo.addEventListener('click', () => seleccionarPill('no'));
+
+  function goToStep(n){
+    [step0, step1].forEach((s, i) => s.classList.toggle('active', i === n));
+    dots.forEach((d, i) => {
+      d.classList.toggle('active', i === n);
+      d.classList.toggle('done', i < n);
+    });
+    progressLabel.textContent = `Paso ${n + 1} de 2`;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  (function configurarDescargaTelegram(){
+    const ua = navigator.userAgent || navigator.vendor || '';
+    const link = document.getElementById('downloadLink');
+    if (!link) return;
+    if (/android/i.test(ua)) {
+      link.href = 'https://play.google.com/store/apps/details?id=org.telegram.messenger';
+      link.textContent = 'Descargar para Android →';
+    } else if (/iPad|iPhone|iPod/.test(ua)) {
+      link.href = 'https://apps.apple.com/app/telegram-messenger/id686449807';
+      link.textContent = 'Descargar para iPhone →';
+    } else {
+      link.href = 'https://telegram.org/dl/';
+      link.textContent = 'Descargar Telegram →';
+    }
+  })();
+
+  function validarEmail(email){
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  }
+  function marcarError(campoId, mostrar){
+    document.getElementById(campoId).classList.toggle('error', mostrar);
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!orgId) return;
+
+    const nombre = document.getElementById('nombre').value.trim();
+    const email = document.getElementById('email').value.trim();
+
+    const nombreValido = nombre.length >= 2;
+    const emailValido = validarEmail(email);
+    const telegramSeleccionado = tieneTelegram !== null;
+
+    marcarError('field-nombre', !nombreValido);
+    marcarError('field-email', !emailValido);
+    pillError.classList.toggle('show', !telegramSeleccionado);
+
+    if (!nombreValido || !emailValido || !telegramSeleccionado) return;
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Enviando...';
+    errorBanner.classList.remove('show');
+
+    try {
+      const resp = await fetch(WEBHOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ org: orgId, nombre, email })
+      });
+      const data = await resp.json();
+
+      if (data.status !== 'ok') {
+        errorMessage.textContent = data.message || 'No se pudo completar el registro. Inténtalo de nuevo.';
+        errorBanner.classList.add('show');
+        downloadStep.style.display = 'none';
+        finalStep.style.display = 'none';
+        goToStep(1);
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Quiero empezar →';
+        return;
+      }
+
+      telegramBtn.href = `https://t.me/${data.bot_username.replace('@','')}?start=${data.codigo}`;
+      duplicateNote.style.display = data.duplicate ? 'block' : 'none';
+      resultNombre.textContent = nombre.split(' ')[0];
+
+      if (tieneTelegram === false) {
+        setCopy('resultado_descarga');
+        downloadStep.style.display = 'block';
+        finalStep.style.display = 'none';
+      } else {
+        setCopy('resultado_final');
+        downloadStep.style.display = 'none';
+        finalStep.style.display = 'block';
+      }
+
+      goToStep(1);
+      submitBtn.classList.remove('pulse');
+
+    } catch (err) {
+      console.error('Error en la inscripción:', err);
+      errorMessage.textContent = 'No se pudo conectar. Comprueba tu conexión e inténtalo de nuevo.';
+      errorBanner.classList.add('show');
+      downloadStep.style.display = 'none';
+      finalStep.style.display = 'none';
+      goToStep(1);
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Quiero empezar →';
+    }
+  });
+
+  document.getElementById('continueToTelegramBtn').addEventListener('click', () => {
+    setCopy('resultado_final');
+    downloadStep.style.display = 'none';
+    finalStep.style.display = 'block';
+  });
+
+  document.getElementById('editDataBtn').addEventListener('click', () => {
+    setCopy('inicio');
+    goToStep(0);
+  });
+
+  setTimeout(() => submitBtn.classList.add('pulse'), 4000);
+</script>
+
+</body>
+</html>
