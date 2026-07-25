@@ -8,9 +8,10 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --navy-950: #070e17;
-    --navy-900: #0d1b2e;
-    --navy-800: #152942;
+    /* Tonos oscurecidos para igualar el fondo de las imágenes de Sergei */
+    --navy-950: #030b16; 
+    --navy-900: #081424;
+    --navy-800: #0f223a;
     --teal-400: #4dd9c5;
     --cyan-400: #5ad1e8;
     --ink-100: #f0f6fc;
@@ -34,18 +35,18 @@
 
   a { color: inherit; text-decoration: none; }
 
-  /* Fondo corporativo */
+  /* Nuevo fondo integrado: un resplandor azul profundo que envuelve las imágenes */
   .bg-grid {
     position: fixed; inset: 0; z-index: 0; pointer-events: none;
-    background: radial-gradient(circle at top right, rgba(21, 41, 66, 0.4), var(--navy-950) 60%);
+    background: radial-gradient(circle at 75% 50%, rgba(20, 80, 140, 0.15), var(--navy-950) 65%);
   }
 
   header {
     position: relative; z-index: 2;
     display: flex; align-items: center; justify-content: space-between;
     padding: 18px 6vw;
-    border-bottom: 1px solid rgba(255,255,255,0.06);
-    background: rgba(7, 14, 23, 0.8);
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    background: rgba(3, 11, 22, 0.8);
     backdrop-filter: blur(12px);
   }
   .brand { display: flex; align-items: center; gap: 12px; }
@@ -62,7 +63,7 @@
     border: 1px solid rgba(255,255,255,0.06);
   }
   .progress .dot {
-    width: 8px; height: 8px; border-radius: 50%; background: #1a314d;
+    width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.1);
     transition: all .35s ease;
   }
   .progress .dot.active { background: var(--teal-400); width: 20px; border-radius: 4px; }
@@ -70,7 +71,8 @@
 
   main {
     position: relative; z-index: 1;
-    display: grid; grid-template-columns: 1fr 1.1fr; align-items: flex-start;
+    display: grid; grid-template-columns: 1fr 1.1fr; 
+    align-items: center; /* Vuelve a estar centrado para evitar huecos en blanco */
     gap: 48px; padding: 40px 6vw;
     max-width: 1380px; margin: 0 auto; width: 100%;
   }
@@ -100,7 +102,6 @@
 
   .lead { font-size: 16px; line-height: 1.6; color: var(--ink-300); margin: 0 0 32px; }
 
-  /* GRID DE BENEFICIOS (Specs) */
   .features-grid {
     display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
     margin-bottom: 32px; text-align: center;
@@ -118,9 +119,8 @@
   .step.active { display: block; }
   @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
 
-  /* CAJA PREGUNTA TELEGRAM REDISEÑADA */
   .telegram-box {
-    background: rgba(13, 27, 46, 0.6);
+    background: rgba(13, 27, 46, 0.4);
     border: 1px solid rgba(255, 255, 255, 0.06);
     border-radius: 16px; padding: 24px; margin-bottom: 24px;
   }
@@ -130,7 +130,7 @@
   .pill {
     display: flex; align-items: center; gap: 12px; padding: 14px; text-align: left;
     border-radius: 12px; border: 1.5px solid rgba(255,255,255,0.08);
-    background: rgba(7, 14, 23, 0.8); cursor: pointer; transition: all .25s ease;
+    background: rgba(7, 14, 23, 0.6); cursor: pointer; transition: all .25s ease;
   }
   .pill:hover { border-color: rgba(90, 209, 232, 0.4); }
   .pill-icon {
@@ -148,11 +148,10 @@
   .pill-error { display: none; color: var(--danger); font-size: 13px; margin: 12px 0 0; }
   .pill-error.show { display: block; }
 
-  /* FORMULARIO */
   form { display: flex; flex-direction: column; gap: 14px; }
   .field input {
     width: 100%; padding: 16px 18px;
-    background: rgba(7, 14, 23, 0.6);
+    background: rgba(7, 14, 23, 0.4);
     border: 1.5px solid rgba(255, 255, 255, 0.1); border-radius: 12px;
     color: var(--ink-100); font-size: 15px; transition: all .25s ease;
   }
@@ -172,16 +171,14 @@
   
   .form-note { font-size: 12px; color: var(--ink-500); margin-top: 4px; }
 
-  /* TARJETAS RESULTADO */
   .download-card, .result-card {
     padding: 22px; border-radius: 16px; border: 1.5px solid rgba(255, 255, 255, 0.1);
-    background: rgba(13, 27, 46, 0.85); backdrop-filter: blur(16px); margin-bottom: 18px;
+    background: rgba(13, 27, 46, 0.5); backdrop-filter: blur(16px); margin-bottom: 18px;
   }
 
-  /* BOTON TELEGRAM DEGRADADO ESPECÍFICO (INSTALAR) */
   .btn-install {
     display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 16px 20px;
-    background: linear-gradient(90deg, #1fa2e1, #13d4b7); /* Degradado Telegram a Turquesa */
+    background: linear-gradient(90deg, #1fa2e1, #13d4b7);
     border: none; border-radius: 12px; margin-bottom: 20px;
     font-family: 'Space Grotesk', sans-serif; color: #fff; cursor: pointer;
     box-shadow: 0 4px 15px rgba(31, 162, 225, 0.3); transition: all .25s ease;
@@ -231,18 +228,21 @@
   }
   .edit-link { display: inline-flex; gap: 6px; margin-top: 14px; font-family: 'Inter', sans-serif; font-size: 12px; color: var(--ink-500); cursor: pointer; background: none; border: none; }
 
-  /* ZONA VISUAL DIFUMINADA (BLENDING) */
+  /* ZONA VISUAL CON FUSIÓN TOTAL (Cero bordes) */
   .visual { position: relative; width: 100%; display: flex; justify-content: center; }
   .visual-stage {
     position: relative; width: 100%; max-width: 650px; aspect-ratio: 1.25 / 1;
-    border-radius: 20px; overflow: hidden;
+    /* Eliminamos el fondo, bordes y sombras para que no parezca una pegatina cuadrada */
+    background: transparent;
+    border: none;
+    box-shadow: none;
   }
 
   .hero-img {
     width: 100%; height: 100%; object-fit: cover; display: none;
-    /* Efecto de difuminado radial hacia los bordes oscuros */
-    mask-image: radial-gradient(ellipse 85% 85% at 50% 50%, black 60%, transparent 100%);
-    -webkit-mask-image: radial-gradient(ellipse 85% 85% at 50% 50%, black 60%, transparent 100%);
+    /* Máscara suavizada para que los bordes desaparezcan por completo en la oscuridad */
+    -webkit-mask-image: radial-gradient(ellipse 75% 75% at 50% 50%, black 45%, transparent 100%);
+    mask-image: radial-gradient(ellipse 75% 75% at 50% 50%, black 45%, transparent 100%);
   }
   .hero-img.active { display: block; animation: fadeIn .5s ease; }
   @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -252,7 +252,7 @@
 
   .hud-card {
     position: absolute; padding: 12px 16px; border-radius: 8px;
-    background: rgba(13, 27, 46, 0.95);
+    background: rgba(8, 20, 36, 0.95); /* Color más integrado */
     border: 1px solid rgba(255, 255, 255, 0.1);
     font-family: 'Inter', sans-serif; font-size: 12px;
     box-shadow: 0 8px 24px rgba(0,0,0,0.5);
@@ -266,22 +266,20 @@
   .badge-danger { display: inline-block; padding: 2px 6px; border-radius: 4px; background: rgba(255,82,82,0.15); color: var(--danger); font-size: 10px; font-weight: 600; margin-top: 4px; }
   .badge-success { display: inline-block; padding: 2px 6px; border-radius: 4px; background: rgba(77,217,197,0.15); color: var(--teal-400); font-size: 10px; font-weight: 600; }
 
-  /* HUDS SEPARADOS PARA NO TAPAR LA CARA */
   .hud-pill-badge {
     position: absolute; padding: 8px 14px; border-radius: 20px;
-    background: rgba(7, 14, 23, 0.9); backdrop-filter: blur(8px);
+    background: rgba(8, 20, 36, 0.9); backdrop-filter: blur(8px);
     border: 1px solid rgba(255,255,255,0.1); font-size: 12px; font-weight: 600; color: var(--ink-100);
     display: flex; align-items: center; gap: 6px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.4);
   }
-  /* Ubicaciones desplazadas hacia los bordes */
   .hud-pill-badge.privado { top: 20%; left: 5%; }
   .hud-pill-badge.cifrado { top: 55%; left: 2%; }
   .hud-pill-badge.rapido { top: 25%; right: 5%; }
 
   footer {
     position: relative; z-index: 1; text-align: center; padding: 24px 6vw;
-    font-size: 12.5px; color: var(--ink-500); border-top: 1px solid rgba(255,255,255,0.06);
+    font-size: 12.5px; color: var(--ink-500); border-top: 1px solid rgba(255,255,255,0.03);
   }
 </style>
 </head>
@@ -311,7 +309,6 @@
     <!-- STEP 0: Formulario -->
     <div class="step active" id="step0">
       
-      <!-- NUEVO GRID DE BENEFICIOS -->
       <div class="features-grid">
         <div class="feature">
           <div class="feature-icon">
@@ -336,7 +333,6 @@
         </div>
       </div>
 
-      <!-- NUEVO SELECTOR TELEGRAM -->
       <div class="telegram-box">
         <p class="telegram-question">¿Tienes Telegram instalado en tu móvil?</p>
         <div class="pill-group">
@@ -386,7 +382,6 @@
     <div class="step" id="step1">
       <div id="downloadStep" style="display:none;">
         
-        <!-- NUEVO BOTÓN DEGRADADO TIPO TELEGRAM -->
         <a class="btn-install" id="downloadLink" href="https://telegram.org/dl/" target="_blank" rel="noopener">
           <div class="install-left">
             <div class="icon-bg">
@@ -443,14 +438,13 @@
     </div>
   </section>
 
-  <!-- SECCIÓN VISUAL (CON MÁSCARA DIFUMINADA) -->
+  <!-- SECCIÓN VISUAL (SIN BORDES NI FONDOS, SOLO MÁSCARA) -->
   <section class="visual">
     <div class="visual-stage">
       <img src="sergei-paso1.png" alt="Análisis de datos" class="hero-img active" id="imgPaso0">
       <img src="sergei-paso2.png" alt="Instalando app segura" class="hero-img" id="imgPaso1">
       <img src="sergei-paso3.png" alt="Sistema protegido" class="hero-img" id="imgPaso2">
 
-      <!-- Overlay HUD Paso 1 -->
       <div class="hud-overlay active" id="hudPaso0">
         <div class="hud-card perfil">
           <div style="color:var(--ink-500); font-size:9px; font-weight:600;">ESTADO DE RED</div>
@@ -464,14 +458,12 @@
         </div>
       </div>
 
-      <!-- Overlay HUD Paso 2 (Separados de la cara) -->
       <div class="hud-overlay" id="hudPaso1">
         <div class="hud-pill-badge privado">🔒 Entorno Privado</div>
         <div class="hud-pill-badge cifrado">🛡️ Chats Cifrados</div>
         <div class="hud-pill-badge rapido">⚡ Comunicación Segura</div>
       </div>
 
-      <!-- Overlay HUD Paso 3 -->
       <div class="hud-overlay" id="hudPaso2">
         <div class="hud-card" style="bottom: 15%; left: 50%; transform: translateX(-50%); border-color: rgba(255,255,255,0.1);">
           <span style="color:var(--teal-400); font-weight:600;">● CONEXIÓN ESTABLECIDA</span> — Todo listo para empezar.
@@ -495,7 +487,6 @@
       lead: 'Regístrate y aprende a asegurar tu información en menos de 3 minutos al día, directamente desde Telegram.'
     },
     resultado_descarga: {
-      // NUEVO TÍTULO Y TEXTO ACTUALIZADO
       h1: 'Prepara tu herramienta <span class="accent">para contraatacar.</span>',
       lead: 'Telegram será tu canal seguro para recibir tu formación y misiones.'
     },
