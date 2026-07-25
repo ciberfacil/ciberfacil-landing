@@ -8,7 +8,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    /* Tonos oscurecidos para igualar el fondo de las imágenes de Sergei */
     --navy-950: #030b16; 
     --navy-900: #081424;
     --navy-800: #0f223a;
@@ -35,7 +34,6 @@
 
   a { color: inherit; text-decoration: none; }
 
-  /* Nuevo fondo integrado: un resplandor azul profundo que envuelve las imágenes */
   .bg-grid {
     position: fixed; inset: 0; z-index: 0; pointer-events: none;
     background: radial-gradient(circle at 75% 50%, rgba(20, 80, 140, 0.15), var(--navy-950) 65%);
@@ -71,8 +69,7 @@
 
   main {
     position: relative; z-index: 1;
-    display: grid; grid-template-columns: 1fr 1.1fr; 
-    align-items: center; /* Vuelve a estar centrado para evitar huecos en blanco */
+    display: grid; grid-template-columns: 1fr 1.1fr; align-items: center;
     gap: 48px; padding: 40px 6vw;
     max-width: 1380px; margin: 0 auto; width: 100%;
   }
@@ -101,19 +98,6 @@
   }
 
   .lead { font-size: 16px; line-height: 1.6; color: var(--ink-300); margin: 0 0 32px; }
-
-  .features-grid {
-    display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
-    margin-bottom: 32px; text-align: center;
-  }
-  .feature-icon {
-    width: 44px; height: 44px; margin: 0 auto 12px;
-    color: var(--cyan-400); border: 1.5px solid rgba(90, 209, 232, 0.4);
-    border-radius: 50%; display: flex; align-items: center; justify-content: center;
-    background: rgba(90, 209, 232, 0.05);
-  }
-  .feature strong { display: block; font-size: 14px; font-family: 'Space Grotesk', sans-serif; color: var(--ink-100); margin-bottom: 6px; }
-  .feature p { font-size: 12.5px; color: var(--ink-300); margin: 0; line-height: 1.4; }
 
   .step { display: none; animation: fadeUp .4s ease; }
   .step.active { display: block; }
@@ -192,12 +176,15 @@
   .btn-install .texts strong { display: block; font-size: 16px; font-weight: 700; margin-bottom: 2px; }
   .btn-install .texts span { display: block; font-size: 12.5px; font-weight: 500; opacity: 0.9; font-family: 'Inter', sans-serif; }
   
+  /* Botón Secundario Corregido (Oscuro y texto blanco) */
   .btn-secondary {
     display: flex; align-items: center; justify-content: center; width: 100%; padding: 16px;
+    background: rgba(13, 27, 46, 0.8);
     border: 1.5px solid rgba(90, 209, 232, 0.4); border-radius: 12px; margin-bottom: 20px;
-    font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 15px; transition: all .25s ease; color: var(--ink-100);
+    font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 15px; 
+    color: #f0f6fc; cursor: pointer; transition: all .25s ease;
   }
-  .btn-secondary:hover { border-color: var(--teal-400); background: rgba(77,217,197,0.1); }
+  .btn-secondary:hover { border-color: var(--teal-400); background: rgba(77,217,197,0.15); }
 
   .privacy-block {
     margin-top: 20px; border: 1px solid var(--glass-border);
@@ -228,19 +215,15 @@
   }
   .edit-link { display: inline-flex; gap: 6px; margin-top: 14px; font-family: 'Inter', sans-serif; font-size: 12px; color: var(--ink-500); cursor: pointer; background: none; border: none; }
 
-  /* ZONA VISUAL CON FUSIÓN TOTAL (Cero bordes) */
+  /* ZONA VISUAL */
   .visual { position: relative; width: 100%; display: flex; justify-content: center; }
   .visual-stage {
     position: relative; width: 100%; max-width: 650px; aspect-ratio: 1.25 / 1;
-    /* Eliminamos el fondo, bordes y sombras para que no parezca una pegatina cuadrada */
-    background: transparent;
-    border: none;
-    box-shadow: none;
+    background: transparent; border: none; box-shadow: none;
   }
 
   .hero-img {
     width: 100%; height: 100%; object-fit: cover; display: none;
-    /* Máscara suavizada para que los bordes desaparezcan por completo en la oscuridad */
     -webkit-mask-image: radial-gradient(ellipse 75% 75% at 50% 50%, black 45%, transparent 100%);
     mask-image: radial-gradient(ellipse 75% 75% at 50% 50%, black 45%, transparent 100%);
   }
@@ -252,7 +235,7 @@
 
   .hud-card {
     position: absolute; padding: 12px 16px; border-radius: 8px;
-    background: rgba(8, 20, 36, 0.95); /* Color más integrado */
+    background: rgba(8, 20, 36, 0.95);
     border: 1px solid rgba(255, 255, 255, 0.1);
     font-family: 'Inter', sans-serif; font-size: 12px;
     box-shadow: 0 8px 24px rgba(0,0,0,0.5);
@@ -309,30 +292,6 @@
     <!-- STEP 0: Formulario -->
     <div class="step active" id="step0">
       
-      <div class="features-grid">
-        <div class="feature">
-          <div class="feature-icon">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-          </div>
-          <strong>Solo 3 minutos al día</strong>
-          <p>Entrena en poco tiempo, cada día.</p>
-        </div>
-        <div class="feature">
-          <div class="feature-icon">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><path d="M12 18h.01"/></svg>
-          </div>
-          <strong>Directo en tu móvil</strong>
-          <p>Todo el curso por Telegram.</p>
-        </div>
-        <div class="feature">
-          <div class="feature-icon">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
-          </div>
-          <strong>100% práctico</strong>
-          <p>Aprendes haciendo, no solo leyendo.</p>
-        </div>
-      </div>
-
       <div class="telegram-box">
         <p class="telegram-question">¿Tienes Telegram instalado en tu móvil?</p>
         <div class="pill-group">
@@ -438,7 +397,6 @@
     </div>
   </section>
 
-  <!-- SECCIÓN VISUAL (SIN BORDES NI FONDOS, SOLO MÁSCARA) -->
   <section class="visual">
     <div class="visual-stage">
       <img src="sergei-paso1.png" alt="Análisis de datos" class="hero-img active" id="imgPaso0">
