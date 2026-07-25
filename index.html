@@ -69,16 +69,17 @@
 
   main {
     position: relative; z-index: 1;
-    display: grid; grid-template-columns: 1fr 1.1fr; align-items: center;
+    display: grid; grid-template-columns: 1fr 1.1fr; 
+    align-items: flex-start; /* Alineación superior para que la foto no caiga */
     gap: 48px; padding: 40px 6vw;
     max-width: 1380px; margin: 0 auto; width: 100%;
   }
   @media (max-width: 960px) {
     main { grid-template-columns: 1fr; padding-top: 20px; gap: 32px; }
-    .visual { order: -1; }
+    .visual { order: -1; margin-top: 0 !important; }
   }
 
-  .copy { max-width: 540px; margin-top: 20px; }
+  .copy { max-width: 540px; margin-top: 12px; }
   .eyebrow {
     display: inline-flex; align-items: center; gap: 8px;
     font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: var(--teal-400);
@@ -176,7 +177,7 @@
   .btn-install .texts strong { display: block; font-size: 16px; font-weight: 700; margin-bottom: 2px; }
   .btn-install .texts span { display: block; font-size: 12.5px; font-weight: 500; opacity: 0.9; font-family: 'Inter', sans-serif; }
   
-  /* Botón Secundario Corregido (Oscuro y texto blanco) */
+  /* Botón Secundario Oscuro Corregido */
   .btn-secondary {
     display: flex; align-items: center; justify-content: center; width: 100%; padding: 16px;
     background: rgba(13, 27, 46, 0.8);
@@ -215,17 +216,30 @@
   }
   .edit-link { display: inline-flex; gap: 6px; margin-top: 14px; font-family: 'Inter', sans-serif; font-size: 12px; color: var(--ink-500); cursor: pointer; background: none; border: none; }
 
-  /* ZONA VISUAL */
-  .visual { position: relative; width: 100%; display: flex; justify-content: center; }
+  /* ZONA VISUAL CON FUSIÓN MEDIANTE CSS (Capa mágica) */
+  .visual { 
+    position: relative; width: 100%; display: flex; justify-content: center; 
+    margin-top: 12px; /* Margen para igualar altura con el título izquierdo */
+  }
   .visual-stage {
     position: relative; width: 100%; max-width: 650px; aspect-ratio: 1.25 / 1;
     background: transparent; border: none; box-shadow: none;
+    overflow: hidden; /* Fundamental para que el degradado no se salga */
+  }
+  
+  /* Capa de degradado que funde la foto con el fondo */
+  .visual-stage::after {
+    content: '';
+    position: absolute;
+    inset: -1px; 
+    pointer-events: none; 
+    background: radial-gradient(ellipse 70% 70% at 50% 50%, transparent 45%, var(--navy-950) 90%);
+    z-index: 1; 
   }
 
   .hero-img {
     width: 100%; height: 100%; object-fit: cover; display: none;
-    -webkit-mask-image: radial-gradient(ellipse 75% 75% at 50% 50%, black 45%, transparent 100%);
-    mask-image: radial-gradient(ellipse 75% 75% at 50% 50%, black 45%, transparent 100%);
+    /* Hemos quitado la máscara de la imagen porque ahora se encarga el pseudo-elemento ::after */
   }
   .hero-img.active { display: block; animation: fadeIn .5s ease; }
   @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -289,7 +303,7 @@
       Regístrate y aprende a asegurar tu información en menos de 3 minutos al día, directamente desde Telegram.
     </p>
 
-    <!-- STEP 0: Formulario -->
+    <!-- STEP 0: Formulario (Sin la cuadrícula de beneficios) -->
     <div class="step active" id="step0">
       
       <div class="telegram-box">
@@ -397,11 +411,12 @@
     </div>
   </section>
 
+  <!-- Usando las imágenes JPG exactas provistas -->
   <section class="visual">
     <div class="visual-stage">
-      <img src="sergei-paso1.png" alt="Análisis de datos" class="hero-img active" id="imgPaso0">
-      <img src="sergei-paso2.png" alt="Instalando app segura" class="hero-img" id="imgPaso1">
-      <img src="sergei-paso3.png" alt="Sistema protegido" class="hero-img" id="imgPaso2">
+      <img src="sergei-paso1.jpg" alt="Análisis de datos" class="hero-img active" id="imgPaso0">
+      <img src="sergei-paso2.jpg" alt="Instalando app segura" class="hero-img" id="imgPaso1">
+      <img src="sergei-paso3.jpg" alt="Sistema protegido" class="hero-img" id="imgPaso2">
 
       <div class="hud-overlay active" id="hudPaso0">
         <div class="hud-card perfil">
