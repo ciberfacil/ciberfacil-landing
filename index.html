@@ -8,9 +8,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    /* Telegram Official Colors (Darker match) */
-    --primary: #2C7ABF; 
-    --primary-hover: #22649E;
+    /* Telegram Official Darker Blue */
+    --primary: #2481CC; 
+    --primary-hover: #1e6eb0;
     --telegram-light: #F0F8FF;
     --text-dark: #1E293B;
     --text-gray: #475569;
@@ -131,12 +131,12 @@
   .step.active { display: block; }
   @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-  /* Caja Telegram (Con Sombra del Nuevo Azul) */
+  /* Caja Telegram */
   .telegram-box {
     background: var(--white);
-    border: 1.5px solid rgba(44, 122, 191, 0.15);
+    border: 1.5px solid rgba(36, 129, 204, 0.15);
     border-radius: 16px; padding: 24px; margin-bottom: 32px;
-    box-shadow: 0 8px 30px rgba(44, 122, 191, 0.08);
+    box-shadow: 0 8px 30px rgba(36, 129, 204, 0.08);
   }
   .telegram-question { 
     font-family: 'Inter', sans-serif; 
@@ -199,10 +199,10 @@
     position: absolute; right: 16px; top: 50%; transform: translateY(-50%); color: var(--text-light); cursor: pointer; transition: color .25s ease;
   }
   
-  /* MEJORA EN BORDES DE FORMULARIO - Aspecto Premium */
+  /* MEJORA PREMIUM EN BORDES DE FORMULARIO */
   .field input {
     width: 100%; padding: 14px 16px 14px 46px; 
-    background: #F8FAFC; /* Fondo sutil para distinguir la caja de input */
+    background: #F8FAFC; 
     border: 1.5px solid #CBD5E1; 
     border-radius: 12px;
     color: var(--text-dark); font-size: 14px; font-family: 'Inter', sans-serif; 
@@ -218,7 +218,7 @@
     background: var(--white);
     outline: none; 
     border-color: var(--primary); 
-    box-shadow: 0 0 0 4px rgba(44, 122, 191, 0.15), 0 2px 6px rgba(0,0,0,0.04); 
+    box-shadow: 0 0 0 4px rgba(36, 129, 204, 0.15), 0 2px 6px rgba(0,0,0,0.04); 
   }
   .field input:focus + .input-icon,
   .field input:focus ~ .input-icon { color: var(--primary); }
@@ -233,9 +233,9 @@
     font-family: 'Inter', sans-serif; font-weight: 600; font-size: 15px;
     cursor: pointer; transition: all .2s ease; display: flex; justify-content: center; align-items: center; gap: 8px;
     width: 240px;
-    box-shadow: 0 4px 12px rgba(44, 122, 191, 0.2);
+    box-shadow: 0 4px 12px rgba(36, 129, 204, 0.2);
   }
-  button[type="submit"]:hover, .btn-primary:hover { background: var(--primary-hover); transform: translateY(-1px); box-shadow: 0 6px 16px rgba(44, 122, 191, 0.3); }
+  button[type="submit"]:hover, .btn-primary:hover { background: var(--primary-hover); transform: translateY(-1px); box-shadow: 0 6px 16px rgba(36, 129, 204, 0.3); }
   
   .form-note { font-size: 11px; color: var(--text-light); margin-top: 16px; display: flex; align-items: center; gap: 6px; }
 
@@ -268,7 +268,7 @@
     letter-spacing: 0.5px;
     margin: 0 2px;
     vertical-align: middle;
-    box-shadow: 0 2px 6px rgba(44, 122, 191, 0.2);
+    box-shadow: 0 2px 6px rgba(36, 129, 204, 0.2);
   }
   
   .btn-telegram-large {
@@ -286,14 +286,14 @@
   .help-card-text p { margin: 0; font-size: 11px; color: var(--text-gray); }
   .help-card-link { font-size: 12px; font-weight: 600; color: var(--primary); display: flex; align-items: center; gap: 4px; border: none; background: none; cursor: pointer; padding: 0; }
 
-  /* --- STEP 2 DOWNLOAD (Caja con degradado a tono de la nueva imagen) --- */
+  /* --- STEP 2 DOWNLOAD --- */
   .gradient-btn {
-    width: 100%; max-width: 100%; background: linear-gradient(90deg, #2C7ABF, #429DE3); border-radius: 16px;
+    width: 100%; max-width: 100%; background: linear-gradient(90deg, #2481CC, #399CF0); border-radius: 16px;
     justify-content: space-between; padding: 20px 24px; margin-bottom: 16px;
-    box-shadow: 0 10px 24px rgba(44, 122, 191, 0.3);
+    box-shadow: 0 10px 24px rgba(36, 129, 204, 0.25);
     border: none;
   }
-  .gradient-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(44, 122, 191, 0.4); }
+  .gradient-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(36, 129, 204, 0.35); }
   .gradient-btn .left-content { display: flex; align-items: center; gap: 16px; }
   .gradient-btn .btn-icon-white {
     width: 44px; height: 44px; background: rgba(255,255,255,0.25); border-radius: 50%;
@@ -310,7 +310,7 @@
   .btn-outline:hover { background: #F8FAFC; border-color: #CBD5E1; color: var(--text-dark); box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
 
   .privacy-box {
-    background: var(--telegram-light);
+    background: var(--telegram-light); 
     border-radius: 16px; padding: 24px;
   }
   .privacy-box-header { display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 14px; color: var(--primary); margin-bottom: 16px; }
@@ -574,7 +574,6 @@
             <div class="step-number">2</div>
             <div class="step-content">
               <strong>Activa tu acceso</strong>
-              <!-- TEXTO ALINEADO Y CON BOTÓN INICIAR -->
               <p>Cuando se abra Telegram, pulsa <span class="bot-btn">INICIAR</span> en la parte inferior de la pantalla.</p>
             </div>
           </div>
