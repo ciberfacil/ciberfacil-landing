@@ -34,18 +34,19 @@
     justify-content: center;
     align-items: center;
     padding: 2vw;
+    overflow-x: hidden;
   }
 
   a { color: inherit; text-decoration: none; }
 
-  /* Contenedor principal */
+  /* Contenedor principal: Restauramos el gap para proteger las cajitas */
   .main-wrapper {
     display: grid;
-    grid-template-columns: 1fr 1.3fr;
+    grid-template-columns: 1fr 1.1fr;
     max-width: 1400px;
     width: 100%;
     background: transparent;
-    gap: 32px;
+    gap: 32px; 
     position: relative;
   }
 
@@ -100,9 +101,9 @@
     background: var(--white);
     border-radius: 24px;
     padding: 48px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.03);
+    box-shadow: 0 12px 48px rgba(0,0,0,0.05); 
     position: relative;
-    z-index: 2;
+    z-index: 5; 
     margin-top: 60px;
     display: flex;
     flex-direction: column;
@@ -322,18 +323,44 @@
   }
   .privacy-list-item p { margin: 0; font-size: 12.5px; color: var(--text-dark); line-height: 1.5; }
 
-  /* --- COLUMNA DERECHA (Visual) --- */
+  /* --- COLUMNA DERECHA --- */
   .right-col {
-    position: relative; display: flex; flex-direction: column; justify-content: center; margin-top: 60px;
+    position: relative; 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center; 
+    margin-top: 60px;
+    z-index: 1; 
   }
 
+  /* SOLO LA IMAGEN se desplaza a la izquierda para fusionarse bajo el formulario */
   .visual-stage {
-    position: relative; width: 100%; height: 100%; min-height: 500px;
-    border-radius: 24px; display: flex; justify-content: center; align-items: center;
+    position: relative; 
+    width: calc(100% + 80px); 
+    margin-left: -80px; 
+    height: 100%; 
+    min-height: 550px;
+    display: flex; 
+    justify-content: center; 
+    align-items: center;
+  }
+
+  .visual-stage::after {
+    content: '';
+    position: absolute;
+    inset: -30px; 
+    pointer-events: none; 
+    background: radial-gradient(ellipse 65% 65% at 50% 50%, transparent 45%, var(--bg-body) 90%);
+    z-index: 1; 
   }
 
   .hero-img {
-    width: 110%; max-width: 700px; object-fit: contain; display: none; z-index: 1;
+    width: 130%; 
+    max-width: 850px; 
+    object-fit: contain; 
+    display: none; 
+    z-index: 0;
+    transform: scale(1.05); 
   }
   .hero-img.active { display: block; }
 
@@ -344,7 +371,7 @@
   .floating-card {
     position: absolute; background: var(--white); padding: 12px 16px; border-radius: 12px;
     box-shadow: 0 8px 24px rgba(0,0,0,0.06); border: 1px solid var(--border-color);
-    display: flex; flex-direction: column; gap: 4px; min-width: 180px;
+    display: flex; flex-direction: column; gap: 4px; min-width: 180px; pointer-events: auto;
   }
   .fc-header { display: flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 700; color: var(--text-dark); }
   .fc-text { font-size: 11px; color: var(--text-gray); line-height: 1.4; }
@@ -352,52 +379,74 @@
   .fc-dot { width: 6px; height: 6px; border-radius: 50%; background: #CBD5E1; }
   .fc-dot.active { background: var(--primary); }
   
-  .card-escaneo { top: 15%; left: -5%; }
+  /* Posiciones de tarjetas - Paso 0 */
+  .card-escaneo { top: 15%; left: 8%; } 
   .card-fuentes { top: 20%; right: -5%; }
   .card-riesgo { top: 50%; right: -10%; }
-  .card-huella { bottom: 20%; left: 50%; transform: translateX(-50%); width: 320px; flex-direction: row; align-items: center; gap: 16px; padding: 16px; border-radius: 16px;}
+  .card-huella { bottom: 20%; left: 55%; transform: translateX(-50%); width: 320px; flex-direction: row; align-items: center; gap: 16px; padding: 16px; border-radius: 16px;}
+  
   .card-badge { position: absolute; background: white; padding: 8px 16px; border-radius: 20px; border: 1px solid var(--border-color); font-size: 12px; font-weight: 600; color: var(--text-dark); display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
-  .badge-privado { top: 10%; left: 5%; }
-  .badge-segura { top: 10%; right: 5%; }
-  .card-bienhecho { top: 25%; right: -10%; border-radius: 16px; padding: 16px; width: 160px; }
-  .card-preparado { bottom: 20%; left: 50%; transform: translateX(-50%); width: 280px; flex-direction: row; align-items: center; gap: 16px; padding: 16px; border-radius: 16px; }
+  
+  /* Posiciones de tarjetas - Paso 1 (NUEVAS: Rápido y sin instalaciones) */
+  .badge-privado { top: 10%; left: 10%; }
+  .badge-ligero { top: 15%; right: 0%; }
+  .badge-sininstalar { bottom: 25%; right: 5%; }
+  
+  /* Posiciones de tarjetas - Paso 2 (Nueva tarjeta Cifrado + Bien hecho alineado) */
+  .badge-cifrado { top: 15%; left: 8%; }
+  .card-bienhecho { top: 25%; right: 5%; border-radius: 16px; padding: 16px; width: 160px; }
+  .card-preparado { bottom: 20%; left: 55%; transform: translateX(-50%); width: 280px; flex-direction: row; align-items: center; gap: 16px; padding: 16px; border-radius: 16px; }
 
   .icon-blue { color: var(--primary); }
   .icon-cyan { color: var(--primary); }
 
-  /* CAJAS BOTTOM FEATURES (AHORA SUPERPUESTAS A LA IMAGEN) */
+  /* CAJAS BOTTOM FEATURES - Alineadas en su columna, respetando el grid y flotando. */
   .bottom-features {
     display: flex; justify-content: space-between; gap: 16px; 
-    margin-top: -70px; /* Margen negativo para que pise y conviva con la imagen */
+    margin-top: -60px; /* Sube y pisa el fondo difuminado de la imagen */
+    padding-top: 0;
     z-index: 10; position: relative;
   }
   .feature-item { 
     background: var(--white);
     border: 1px solid #E2E8F0;
     border-radius: 16px;
-    padding: 24px 16px; /* Más padding para hacer la caja más sólida */
-    box-shadow: 0 8px 24px rgba(0,0,0,0.05); /* Sombra acentuada para destacar sobre la imagen */
+    padding: 24px 16px; 
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05); 
     display: flex; flex-direction: column; gap: 8px; flex: 1;
     transition: all .2s ease;
   }
   .feature-item:hover {
-    box-shadow: 0 12px 32px rgba(0,0,0,0.08);
-    transform: translateY(-2px);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.08);
+    transform: translateY(-4px);
   }
   .feature-header { display: flex; align-items: center; gap: 8px; font-size: 12.5px; font-weight: 700; color: var(--brand-dark); }
   .feature-text { font-size: 11.5px; color: var(--text-gray); line-height: 1.5; }
 
-  footer { position: absolute; bottom: -40px; left: 0; font-size: 11px; color: var(--text-light); }
+  /* FOOTER - Ahora anclado firmemente a nivel de Wrapper en todas las pantallas */
+  footer { 
+    grid-column: 1 / -1; 
+    text-align: center; 
+    font-size: 12px; 
+    color: var(--text-light); 
+    margin-top: 20px; 
+    padding-bottom: 20px;
+    order: 10; 
+  }
 
   @media (max-width: 1024px) {
     .main-wrapper { grid-template-columns: 1fr; gap: 16px; }
     .right-col { margin-top: 80px; order: -1; align-items: center; } 
-    .visual-stage { min-height: 350px; }
-    .hero-img { width: 100%; max-width: 450px; }
-    .left-col { margin-top: 0; padding: 32px; }
+    .visual-stage { min-height: 350px; width: 100%; margin-left: 0; } /* Reseteo en móvil */
+    .hero-img { width: 130%; max-width: 550px; } 
+    .left-col { margin-top: -30px; padding: 32px; box-shadow: 0 -10px 40px rgba(0,0,0,0.05); }
     .bottom-features { display: none; } 
     .floating-card { transform: scale(0.85); } 
-    .card-escaneo { left: 0; } .card-fuentes { right: 0; } .card-riesgo { right: 0; }
+    .card-escaneo { left: 5%; top: 10%; } 
+    .card-fuentes { right: 5%; top: 15%; } 
+    .card-riesgo { right: 5%; top: 40%; }
+    .card-huella { left: 50%; bottom: 5%; transform: translateX(-50%) scale(0.85); }
+    .card-preparado { left: 50%; bottom: 5%; transform: translateX(-50%) scale(0.85); }
   }
 </style>
 </head>
@@ -628,6 +677,7 @@
     </div>
   </div>
 
+  <!-- COLUMNA DERECHA -->
   <div class="right-col">
     <div class="visual-stage">
       <img src="sergei-paso1.png" alt="Sergei Hacker" class="hero-img active" id="imgPaso0" onerror="this.src='https://via.placeholder.com/600x500/F4F7F9/F4F7F9'">
@@ -675,14 +725,22 @@
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
           Entorno privado
         </div>
-        <div class="card-badge badge-segura">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          Comunicación segura
+        <div class="card-badge badge-ligero">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          Rápido y ligero
+        </div>
+        <div class="card-badge badge-sininstalar">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+          Sin instalaciones extra
         </div>
       </div>
 
       <!-- HUDS Paso 2 (Final) -->
       <div class="hud-overlay" id="hudPaso2">
+        <div class="card-badge badge-cifrado">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          Conexión cifrada
+        </div>
         <div class="floating-card card-bienhecho">
           <div class="fc-header" style="margin-bottom:6px;">
             <svg class="icon-blue" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
@@ -702,7 +760,7 @@
 
     </div>
 
-    <!-- Cajas características inferiores -->
+    <!-- Cajas características inferiores (Las subimos al hueco negativo para que se metan bajo la imagen difuminada) -->
     <div class="bottom-features">
       <div class="feature-item">
         <div class="feature-header"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> 3 minutos al día</div>
@@ -721,9 +779,10 @@
         <div class="feature-text">Demuestra lo que has aprendido.</div>
       </div>
     </div>
-    
-    <footer>© CiberSeguridadFácil by María Reina. Todos los derechos reservados.</footer>
   </div>
+
+  <!-- FOOTER en todas las pantallas -->
+  <footer>© CiberSeguridadFácil by María Reina. Todos los derechos reservados.</footer>
 </div>
 
 <!-- SCRIPT ORIGINAL -->
