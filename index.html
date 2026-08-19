@@ -23,23 +23,31 @@
   }
 
   * { box-sizing: border-box; }
-  html, body { margin: 0; padding: 0; }
-  body {
+  
+  html, body { 
+    margin: 0; 
+    padding: 0; 
     background: var(--bg-body);
     color: var(--text-dark);
     font-family: 'Inter', sans-serif;
     -webkit-font-smoothing: antialiased;
+  }
+
+  a { color: inherit; text-decoration: none; }
+
+  /* Envoltorio anti-desbordamiento (Bloquea el scroll horizontal en móviles) */
+  .page-overflow-wrapper {
+    overflow-x: hidden;
+    width: 100%;
     min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 2vw;
-    overflow-x: hidden;
+    box-sizing: border-box;
   }
 
-  a { color: inherit; text-decoration: none; }
-
-  /* Contenedor principal: Restauramos el gap para proteger las cajitas */
+  /* Contenedor principal */
   .main-wrapper {
     display: grid;
     grid-template-columns: 1fr 1.1fr;
@@ -87,6 +95,9 @@
     display: flex; align-items: center; gap: 12px;
     font-size: 13px; font-weight: 500; color: var(--text-dark);
     pointer-events: auto;
+  }
+  .progress-label {
+    white-space: nowrap; /* Evita que "Paso 1 de 2" se parta en dos líneas en móvil */
   }
   .progress-bar-container { display: flex; gap: 4px; }
   .progress .dot {
@@ -379,7 +390,7 @@
   .fc-dot { width: 6px; height: 6px; border-radius: 50%; background: #CBD5E1; }
   .fc-dot.active { background: var(--primary); }
   
-  /* Posiciones de tarjetas - Paso 0 */
+  /* Posiciones de tarjetas - Paso 0 (Desktop) */
   .card-escaneo { top: 15%; left: 8%; } 
   .card-fuentes { top: 20%; right: -5%; }
   .card-riesgo { top: 50%; right: -10%; }
@@ -387,12 +398,12 @@
   
   .card-badge { position: absolute; background: white; padding: 8px 16px; border-radius: 20px; border: 1px solid var(--border-color); font-size: 12px; font-weight: 600; color: var(--text-dark); display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
   
-  /* Posiciones de tarjetas - Paso 1 (NUEVAS: Rápido y sin instalaciones) */
+  /* Posiciones de tarjetas - Paso 1 */
   .badge-privado { top: 10%; left: 10%; }
   .badge-ligero { top: 15%; right: 0%; }
   .badge-sininstalar { bottom: 25%; right: 5%; }
   
-  /* Posiciones de tarjetas - Paso 2 (Nueva tarjeta Cifrado + Bien hecho alineado) */
+  /* Posiciones de tarjetas - Paso 2 */
   .badge-cifrado { top: 15%; left: 8%; }
   .card-bienhecho { top: 25%; right: 5%; border-radius: 16px; padding: 16px; width: 160px; }
   .card-preparado { bottom: 20%; left: 55%; transform: translateX(-50%); width: 280px; flex-direction: row; align-items: center; gap: 16px; padding: 16px; border-radius: 16px; }
@@ -434,355 +445,406 @@
     order: 10; 
   }
 
+  /* REGLAS RESPONSIVE (MÓVIL) PARA CORREGIR DESBORDAMIENTOS Y CORTES */
   @media (max-width: 1024px) {
-    .main-wrapper { grid-template-columns: 1fr; gap: 16px; }
-    .right-col { margin-top: 80px; order: -1; align-items: center; } 
-    .visual-stage { min-height: 350px; width: 100%; margin-left: 0; } /* Reseteo en móvil */
-    .hero-img { width: 130%; max-width: 550px; } 
-    .left-col { margin-top: -30px; padding: 32px; box-shadow: 0 -10px 40px rgba(0,0,0,0.05); }
-    .bottom-features { display: none; } 
-    .floating-card { transform: scale(0.85); } 
-    .card-escaneo { left: 5%; top: 10%; } 
-    .card-fuentes { right: 5%; top: 15%; } 
-    .card-riesgo { right: 5%; top: 40%; }
-    .card-huella { left: 50%; bottom: 5%; transform: translateX(-50%) scale(0.85); }
-    .card-preparado { left: 50%; bottom: 5%; transform: translateX(-50%) scale(0.85); }
+    .page-overflow-wrapper {
+      padding: 16px; /* Menos espacio muerto lateral en móviles */
+    }
+    
+    .main-wrapper { 
+      grid-template-columns: 1fr; 
+      gap: 16px; 
+    }
+    
+    .right-col { 
+      margin-top: 70px; 
+      order: -1; /* Pone la imagen de Sergéi arriba del formulario */
+      align-items: center; 
+    } 
+    
+    .visual-stage { 
+      min-height: 350px; 
+      width: 100%; 
+      margin-left: 0; /* Resetea el margen negativo para evitar scroll lateral */
+    } 
+    
+    .hero-img { 
+      width: 120%; /* Se reduce ligeramente para no romper la pantalla */
+      max-width: 500px; 
+      transform: scale(1);
+    } 
+    
+    .left-col { 
+      margin-top: -30px; 
+      padding: 32px 24px; /* Reduce los bordes internos laterales para dar espacio */
+      box-shadow: 0 -10px 40px rgba(0,0,0,0.05); 
+    }
+    
+    .bottom-features { display: none; } /* Oculto en móvil por limpieza */
+    
+    /* REAJUSTE DE TARJETAS HUD PARA QUE NO TAPEN LA CARA NI SE SALGAN (Solución Error 1 y 3) */
+    .card-escaneo { left: 0%; top: 5%; transform: scale(0.75); transform-origin: top left; } 
+    .card-fuentes { right: 0%; top: -5%; transform: scale(0.75); transform-origin: top right; } /* Elevado para no tapar el ojo */
+    .card-riesgo { right: 0%; top: 45%; transform: scale(0.75); transform-origin: right center; } /* Descansa sobre el brazo */
+    .card-huella { left: 50%; bottom: 5%; transform: translateX(-50%) scale(0.8); width: 90%; max-width: 320px; }
+    
+    .badge-privado { top: 0%; left: 0%; transform: scale(0.8); transform-origin: top left; }
+    .badge-ligero { top: 5%; right: 0%; transform: scale(0.8); transform-origin: top right; }
+    .badge-sininstalar { bottom: 25%; right: 0%; transform: scale(0.8); transform-origin: right center; }
+    
+    .badge-cifrado { top: 0%; left: 0%; transform: scale(0.8); transform-origin: top left; }
+    .card-bienhecho { top: 15%; right: 0%; transform: scale(0.75); transform-origin: top right; }
+    .card-preparado { bottom: 5%; left: 50%; transform: translateX(-50%) scale(0.8); width: 90%; max-width: 320px; }
+  }
+
+  /* REGLA EXTRA PARA TELÉFONOS PEQUEÑOS (Solución Error 2: Botones Cortados) */
+  @media (max-width: 600px) {
+    .pill-group {
+      grid-template-columns: 1fr; /* Apila los botones de Telegram en vertical para que no se corten */
+    }
+    h1 {
+      font-size: 28px; /* Texto principal un pelín más manejable */
+    }
+    .brand-text {
+      font-size: 16px;
+    }
   }
 </style>
 </head>
 <body>
 
-<div class="main-wrapper">
-  
-  <header class="top-header">
-    <div class="brand">
-      <svg viewBox="0 0 24 24" fill="none" stroke="var(--brand-dark)" stroke-width="1.5">
-        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-        <path d="M12 8v4m0 4h.01"/>
-      </svg>
-      <div class="brand-text">
-        <div>CiberSeguridad<span class="cyan" style="color: var(--primary);">Fácil</span></div>
-        <span>by María Reina</span>
-      </div>
-    </div>
-    <div class="progress" id="progress">
-      <span class="progress-label" id="progressLabel">Paso 1 de 2</span>
-      <div class="progress-bar-container">
-        <span class="dot active" data-step="0"></span>
-        <span class="dot" data-step="1"></span>
-      </div>
-    </div>
-  </header>
-
-  <div class="left-col">
-    <span class="eyebrow">Acceso a tu formación</span>
-    <h1 id="pageH1">Sergéi tiene tus datos.<br><span class="accent">¿Podrás detenerlo?</span></h1>
-    <p class="lead" id="pageLead">
-      Regístrate y aprende a proteger la información de tu empresa en menos de <strong>3 minutos al día</strong>, directamente desde Telegram.
-    </p>
-
-    <!-- STEP 0 -->
-    <div class="step active" id="step0">
-      <div class="telegram-box">
-        <p class="telegram-question">Confirma tu acceso a Telegram para continuar:</p>
-        <div class="pill-group">
-          <!-- PILL SI -->
-          <div class="pill" id="pillSi" data-value="si">
-            <div class="pill-icon">
-              <!-- ICONO TELEGRAM OFICIAL -->
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M20.665 3.717l-17.73 6.837c-1.21.486-1.203 1.161-.222 1.462l4.552 1.42l10.532-6.645c.498-.303.953-.14.579.192l-8.533 7.701h-.002l.002.001l-.314 4.692c.46 0 .663-.211.921-.46l2.211-2.15l4.599 3.397c.848.467 1.457.227 1.668-.785l3.019-14.228c.309-1.239-.473-1.8-1.282-1.434z"/>
-              </svg>
-            </div>
-            <div class="pill-text">
-              <strong>Sí, tengo Telegram</strong>
-              <span>Continuar al registro</span>
-            </div>
-          </div>
-          <!-- PILL NO -->
-          <div class="pill" id="pillNo" data-value="no">
-            <div class="pill-icon">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                <polyline points="7 10 12 15 17 10"/>
-                <line x1="12" y1="15" x2="12" y2="3"/>
-              </svg>
-            </div>
-            <div class="pill-text">
-              <strong>Todavía no</strong>
-              <span>Te ayudo a instalarlo</span>
-            </div>
-          </div>
+<div class="page-overflow-wrapper">
+  <div class="main-wrapper">
+    
+    <header class="top-header">
+      <div class="brand">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--brand-dark)" stroke-width="1.5">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          <path d="M12 8v4m0 4h.01"/>
+        </svg>
+        <div class="brand-text">
+          <div>CiberSeguridad<span class="cyan" style="color: var(--primary);">Fácil</span></div>
+          <span>by María Reina</span>
         </div>
-        <p class="pill-error" id="pillError">Selecciona una opción para continuar.</p>
       </div>
+      <div class="progress" id="progress">
+        <span class="progress-label" id="progressLabel">Paso 1 de 2</span>
+        <div class="progress-bar-container">
+          <span class="dot active" data-step="0"></span>
+          <span class="dot" data-step="1"></span>
+        </div>
+      </div>
+    </header>
 
-      <form id="leadForm" novalidate>
-        <div class="timeline-container">
-          <div class="field field-group" id="field-nombre">
-            <label class="field-label">¿Cómo te llamas?</label>
-            <div class="input-wrapper">
-              <div class="input-icon">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    <div class="left-col">
+      <span class="eyebrow">Acceso a tu formación</span>
+      <h1 id="pageH1">Sergéi tiene tus datos.<br><span class="accent">¿Podrás detenerlo?</span></h1>
+      <p class="lead" id="pageLead">
+        Regístrate y aprende a proteger la información de tu empresa en menos de <strong>3 minutos al día</strong>, directamente desde Telegram.
+      </p>
+
+      <!-- STEP 0 -->
+      <div class="step active" id="step0">
+        <div class="telegram-box">
+          <p class="telegram-question">Confirma tu acceso a Telegram para continuar:</p>
+          <div class="pill-group">
+            <!-- PILL SI -->
+            <div class="pill" id="pillSi" data-value="si">
+              <div class="pill-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M20.665 3.717l-17.73 6.837c-1.21.486-1.203 1.161-.222 1.462l4.552 1.42l10.532-6.645c.498-.303.953-.14.579.192l-8.533 7.701h-.002l.002.001l-.314 4.692c.46 0 .663-.211.921-.46l2.211-2.15l4.599 3.397c.848.467 1.457.227 1.668-.785l3.019-14.228c.309-1.239-.473-1.8-1.282-1.434z"/>
+                </svg>
               </div>
-              <input type="text" id="nombre" name="nombre" placeholder="Escribe tu nombre completo" autocomplete="name">
-            </div>
-            <small>Escribe tu nombre para continuar.</small>
-          </div>
-          
-          <div class="field field-group" id="field-email">
-            <label class="field-label">¿Cuál es tu email de trabajo?</label>
-            <div class="input-wrapper">
-              <div class="input-icon">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-              </div>
-              <input type="email" id="email" name="email" placeholder="ejemplo@tudominio.com" autocomplete="email">
-            </div>
-            <small>Escribe un email válido.</small>
-          </div>
-          
-          <div class="field field-group" id="field-codigo">
-            <label class="field-label">Contraseña de acceso</label>
-            <div class="input-wrapper">
-              <div class="input-icon">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-              </div>
-              <input type="text" id="codigo" name="codigo" placeholder="Ej. CIBER2026" style="text-transform: uppercase;">
-              <div class="input-icon-right">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              <div class="pill-text">
+                <strong>Sí, tengo Telegram</strong>
+                <span>Continuar al registro</span>
               </div>
             </div>
-            <small id="codigo-error">Introduce una contraseña válida.</small>
+            <!-- PILL NO -->
+            <div class="pill" id="pillNo" data-value="no">
+              <div class="pill-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                  <polyline points="7 10 12 15 17 10"/>
+                  <line x1="12" y1="15" x2="12" y2="3"/>
+                </svg>
+              </div>
+              <div class="pill-text">
+                <strong>Todavía no</strong>
+                <span>Te ayudo a instalarlo</span>
+              </div>
+            </div>
           </div>
+          <p class="pill-error" id="pillError">Selecciona una opción para continuar.</p>
         </div>
 
-        <button type="submit" id="submitBtn">Quiero empezar →</button>
+        <form id="leadForm" novalidate>
+          <div class="timeline-container">
+            <div class="field field-group" id="field-nombre">
+              <label class="field-label">¿Cómo te llamas?</label>
+              <div class="input-wrapper">
+                <div class="input-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                </div>
+                <input type="text" id="nombre" name="nombre" placeholder="Escribe tu nombre completo" autocomplete="name">
+              </div>
+              <small>Escribe tu nombre para continuar.</small>
+            </div>
+            
+            <div class="field field-group" id="field-email">
+              <label class="field-label">¿Cuál es tu email de trabajo?</label>
+              <div class="input-wrapper">
+                <div class="input-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                </div>
+                <input type="email" id="email" name="email" placeholder="ejemplo@tudominio.com" autocomplete="email">
+              </div>
+              <small>Escribe un email válido.</small>
+            </div>
+            
+            <div class="field field-group" id="field-codigo">
+              <label class="field-label">Contraseña de acceso</label>
+              <div class="input-wrapper">
+                <div class="input-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                </div>
+                <input type="text" id="codigo" name="codigo" placeholder="Ej. CIBER2026" style="text-transform: uppercase;">
+                <div class="input-icon-right">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                </div>
+              </div>
+              <small id="codigo-error">Introduce una contraseña válida.</small>
+            </div>
+          </div>
+
+          <button type="submit" id="submitBtn">Quiero empezar →</button>
+          
+          <p class="form-note">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            No vendemos ni compartimos tus datos. Puedes darte de baja cuando quieras.
+          </p>
+        </form>
+      </div>
+
+      <!-- STEP 1: Resultado -->
+      <div class="step" id="step1">
         
-        <p class="form-note">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-          No vendemos ni compartimos tus datos. Puedes darte de baja cuando quieras.
-        </p>
-      </form>
-    </div>
-
-    <!-- STEP 1: Resultado -->
-    <div class="step" id="step1">
-      
-      <!-- USUARIO NO TIENE TELEGRAM -->
-      <div id="downloadStep" style="display:none;">
-        <a class="btn-primary gradient-btn" id="downloadLink" href="https://telegram.org/dl/" target="_blank" rel="noopener">
-          <div class="left-content">
-            <div class="btn-icon-white">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M20.665 3.717l-17.73 6.837c-1.21.486-1.203 1.161-.222 1.462l4.552 1.42l10.532-6.645c.498-.303.953-.14.579.192l-8.533 7.701h-.002l.002.001l-.314 4.692c.46 0 .663-.211.921-.46l2.211-2.15l4.599 3.397c.848.467 1.457.227 1.668-.785l3.019-14.228c.309-1.239-.473-1.8-1.282-1.434z"/>
-              </svg>
+        <!-- USUARIO NO TIENE TELEGRAM -->
+        <div id="downloadStep" style="display:none;">
+          <a class="btn-primary gradient-btn" id="downloadLink" href="https://telegram.org/dl/" target="_blank" rel="noopener">
+            <div class="left-content">
+              <div class="btn-icon-white">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M20.665 3.717l-17.73 6.837c-1.21.486-1.203 1.161-.222 1.462l4.552 1.42l10.532-6.645c.498-.303.953-.14.579.192l-8.533 7.701h-.002l.002.001l-.314 4.692c.46 0 .663-.211.921-.46l2.211-2.15l4.599 3.397c.848.467 1.457.227 1.668-.785l3.019-14.228c.309-1.239-.473-1.8-1.282-1.434z"/>
+                </svg>
+              </div>
+              <div class="gradient-btn-text">
+                <strong>Instala Telegram</strong>
+                <span>Gratis, rápido y seguro</span>
+              </div>
             </div>
-            <div class="gradient-btn-text">
-              <strong>Instala Telegram</strong>
-              <span>Gratis, rápido y seguro</span>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+          </a>
+
+          <button type="button" class="btn-primary btn-outline" id="continueToTelegramBtn">
+            Ya lo tengo instalado, continuar →
+          </button>
+
+          <div class="privacy-box">
+            <div class="privacy-box-header">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              Tu privacidad es lo primero
+            </div>
+            <div class="privacy-list">
+              <div class="privacy-list-item">
+                <div class="num">1</div>
+                <p>Abre Telegram por primera vez y termina la instalación.</p>
+              </div>
+              <div class="privacy-list-item">
+                <div class="num">2</div>
+                <p>Ve a Ajustes → Privacidad y seguridad → Número de teléfono.</p>
+              </div>
+              <div class="privacy-list-item">
+                <div class="num">3</div>
+                <p>Elige "Nadie" — así decides tú quién puede verte.<br>No compartas tu número con el curso.</p>
+              </div>
             </div>
           </div>
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
-        </a>
+        </div>
 
-        <button type="button" class="btn-primary btn-outline" id="continueToTelegramBtn">
-          Ya lo tengo instalado, continuar →
-        </button>
-
-        <div class="privacy-box">
-          <div class="privacy-box-header">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-            Tu privacidad es lo primero
+        <!-- USUARIO SÍ TIENE TELEGRAM -->
+        <div id="finalStep" style="display:none;">
+          <div class="steps-list">
+            <div class="step-item">
+              <div class="step-number">1</div>
+              <div class="step-content">
+                <strong>Pulsa el botón</strong>
+                <p>Se abrirá tu acceso a<br>CiberSeguridadFácil en Telegram.</p>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-number">2</div>
+              <div class="step-content">
+                <strong>Activa tu acceso</strong>
+                <p>Cuando se abra Telegram, pulsa <span class="bot-btn">INICIAR</span> en la parte inferior de la pantalla.</p>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-number">3</div>
+              <div class="step-content">
+                <strong>Ya estás dentro</strong>
+                <p>Tu acceso se comprobará automáticamente<br>y podrás empezar tu formación.</p>
+              </div>
+            </div>
           </div>
-          <div class="privacy-list">
-            <div class="privacy-list-item">
-              <div class="num">1</div>
-              <p>Abre Telegram por primera vez y termina la instalación.</p>
+
+          <a class="btn-primary btn-telegram-large" id="telegramBtn" href="#" target="_blank" rel="noopener">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M20.665 3.717l-17.73 6.837c-1.21.486-1.203 1.161-.222 1.462l4.552 1.42l10.532-6.645c.498-.303.953-.14.579.192l-8.533 7.701h-.002l.002.001l-.314 4.692c.46 0 .663-.211.921-.46l2.211-2.15l4.599 3.397c.848.467 1.457.227 1.668-.785l3.019-14.228c.309-1.239-.473-1.8-1.282-1.434z"/>
+            </svg>
+            Abrir CiberSeguridadFácil en Telegram →
+          </a>
+
+          <div class="help-cards">
+            <div class="help-card">
+              <div class="help-card-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+              </div>
+              <div class="help-card-text">
+                <strong>¿Estás en un ordenador?</strong>
+                <p>No necesitas tener Telegram instalado.<br>Puedes abrirlo directamente desde el navegador.</p>
+              </div>
             </div>
-            <div class="privacy-list-item">
-              <div class="num">2</div>
-              <p>Ve a Ajustes → Privacidad y seguridad → Número de teléfono.</p>
+            <div class="help-card">
+              <div class="help-card-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              </div>
+              <div class="help-card-text">
+                <strong>¿Has cerrado esta página?</strong>
+                <p>También hemos enviado tu enlace de acceso por email.</p>
+              </div>
             </div>
-            <div class="privacy-list-item">
-              <div class="num">3</div>
-              <p>Elige "Nadie" — así decides tú quién puede verte.<br>No compartas tu número con el curso.</p>
+            <div class="help-card">
+              <div class="help-card-icon" style="color:var(--text-light);">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+              </div>
+              <div class="help-card-text">
+                <strong>¿Te has equivocado en algún dato?</strong>
+              </div>
+              <button type="button" class="help-card-link" id="editDataBtn">Editar lo aquí <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg></button>
             </div>
           </div>
         </div>
       </div>
+    </div>
 
-      <!-- USUARIO SÍ TIENE TELEGRAM -->
-      <div id="finalStep" style="display:none;">
-        <div class="steps-list">
-          <div class="step-item">
-            <div class="step-number">1</div>
-            <div class="step-content">
-              <strong>Pulsa el botón</strong>
-              <p>Se abrirá tu acceso a<br>CiberSeguridadFácil en Telegram.</p>
+    <!-- COLUMNA DERECHA -->
+    <div class="right-col">
+      <div class="visual-stage">
+        <img src="sergei-paso1.png" alt="Sergei Hacker" class="hero-img active" id="imgPaso0" onerror="this.src='https://via.placeholder.com/600x500/F4F7F9/F4F7F9'">
+        <img src="sergei-paso2.png" alt="Instalando app" class="hero-img" id="imgPaso1" onerror="this.src='https://via.placeholder.com/600x500/F4F7F9/F4F7F9'">
+        <img src="sergei-paso3.png" alt="Acceso preparado" class="hero-img" id="imgPaso2" onerror="this.src='https://via.placeholder.com/600x500/F4F7F9/F4F7F9'">
+        
+        <!-- HUDS Paso 0 -->
+        <div class="hud-overlay active" id="hudPaso0">
+          <div class="floating-card card-escaneo">
+            <div class="fc-header">
+              <svg class="icon-blue" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              ESCANEO ACTIVO
             </div>
+            <div class="fc-text">Buscando información<br>pública sobre tu empresa...</div>
+            <div class="fc-dots"><span class="fc-dot active"></span><span class="fc-dot active"></span><span class="fc-dot"></span></div>
           </div>
-          <div class="step-item">
-            <div class="step-number">2</div>
-            <div class="step-content">
-              <strong>Activa tu acceso</strong>
-              <p>Cuando se abra Telegram, pulsa <span class="bot-btn">INICIAR</span> en la parte inferior de la pantalla.</p>
+          <div class="floating-card card-fuentes">
+            <div class="fc-header">
+              <svg class="icon-blue" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              FUENTES ABIERTAS
             </div>
+            <div class="fc-text">Redes sociales, webs,<br>dominios y más.</div>
+            <div class="fc-dots"><span class="fc-dot active"></span><span class="fc-dot"></span><span class="fc-dot"></span></div>
           </div>
-          <div class="step-item">
-            <div class="step-number">3</div>
-            <div class="step-content">
-              <strong>Ya estás dentro</strong>
-              <p>Tu acceso se comprobará automáticamente<br>y podrás empezar tu formación.</p>
+          <div class="floating-card card-riesgo">
+            <div class="fc-header">
+              <svg class="icon-blue" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              RIESGO DETECTADO
+            </div>
+            <div class="fc-text">Cuanta más información<br>tenga, más vulnerable<br>serás.</div>
+            <div class="fc-dots"><span class="fc-dot active"></span><span class="fc-dot active"></span><span class="fc-dot active"></span></div>
+          </div>
+          <div class="floating-card card-huella">
+            <svg class="icon-cyan" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/><path d="M12 6c-3.31 0-6 2.69-6 6 0 1.3.43 2.5 1.15 3.47.38.5.85.91 1.38 1.22.47.27.97.47 1.5.6.53.13 1.07.19 1.62.19.78 0 1.54-.15 2.25-.43.72-.28 1.38-.69 1.95-1.18.57-.5 1.04-1.09 1.39-1.76.35-.67.57-1.4.65-2.16.03-.31.05-.62.05-.94 0-3.31-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z"/></svg>
+            <div style="display:flex; flex-direction:column; gap:2px;">
+              <strong style="font-size:13px; color:var(--text-dark);">Sergéi ya tiene piezas del puzzle.</strong>
+              <span style="font-size:13px; color:var(--primary); font-weight:600;">No le hagas el trabajo fácil.</span>
             </div>
           </div>
         </div>
 
-        <a class="btn-primary btn-telegram-large" id="telegramBtn" href="#" target="_blank" rel="noopener">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M20.665 3.717l-17.73 6.837c-1.21.486-1.203 1.161-.222 1.462l4.552 1.42l10.532-6.645c.498-.303.953-.14.579.192l-8.533 7.701h-.002l.002.001l-.314 4.692c.46 0 .663-.211.921-.46l2.211-2.15l4.599 3.397c.848.467 1.457.227 1.668-.785l3.019-14.228c.309-1.239-.473-1.8-1.282-1.434z"/>
-          </svg>
-          Abrir CiberSeguridadFácil en Telegram →
-        </a>
+        <!-- HUDS Paso 1 (Download) -->
+        <div class="hud-overlay" id="hudPaso1">
+          <div class="card-badge badge-privado">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            Entorno privado
+          </div>
+          <div class="card-badge badge-ligero">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            Rápido y ligero
+          </div>
+          <div class="card-badge badge-sininstalar">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+            Sin instalaciones extra
+          </div>
+        </div>
 
-        <div class="help-cards">
-          <div class="help-card">
-            <div class="help-card-icon">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-            </div>
-            <div class="help-card-text">
-              <strong>¿Estás en un ordenador?</strong>
-              <p>No necesitas tener Telegram instalado.<br>Puedes abrirlo directamente desde el navegador.</p>
-            </div>
+        <!-- HUDS Paso 2 (Final) -->
+        <div class="hud-overlay" id="hudPaso2">
+          <div class="card-badge badge-cifrado">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            Conexión cifrada
           </div>
-          <div class="help-card">
-            <div class="help-card-icon">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          <div class="floating-card card-bienhecho">
+            <div class="fc-header" style="margin-bottom:6px;">
+              <svg class="icon-blue" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              Bien hecho.
             </div>
-            <div class="help-card-text">
-              <strong>¿Has cerrado esta página?</strong>
-              <p>También hemos enviado tu enlace de acceso por email.</p>
-            </div>
+            <div class="fc-text" style="color:var(--primary); font-weight:500;">Ya tienes todo preparado para empezar.</div>
           </div>
-          <div class="help-card">
-            <div class="help-card-icon" style="color:var(--text-light);">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          <div class="floating-card card-preparado">
+            <svg class="icon-cyan" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/><path d="M12 6c-3.31 0-6 2.69-6 6 0 1.3.43 2.5 1.15 3.47.38.5.85.91 1.38 1.22.47.27.97.47 1.5.6.53.13 1.07.19 1.62.19.78 0 1.54-.15 2.25-.43.72-.28 1.38-.69 1.95-1.18.57-.5 1.04-1.09 1.39-1.76.35-.67.57-1.4.65-2.16.03-.31.05-.62.05-.94 0-3.31-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z"/></svg>
+            <div style="display:flex; flex-direction:column; gap:2px; flex:1;">
+              <strong style="font-size:13px; color:var(--primary); text-transform:uppercase;">Acceso Preparado</strong>
+              <span style="font-size:13px; color:var(--text-gray);">Todo listo para empezar.</span>
             </div>
-            <div class="help-card-text">
-              <strong>¿Te has equivocado en algún dato?</strong>
-            </div>
-            <button type="button" class="help-card-link" id="editDataBtn">Editar lo aquí <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg></button>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
           </div>
+        </div>
+
+      </div>
+
+      <!-- Cajas características inferiores -->
+      <div class="bottom-features">
+        <div class="feature-item">
+          <div class="feature-header"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> 3 minutos al día</div>
+          <div class="feature-text">Aprendizaje ágil y sin rodeos.</div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-header"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg> Directo en Telegram</div>
+          <div class="feature-text">En tu móvil, donde ya estás.</div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-header"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Para tu empresa</div>
+          <div class="feature-text">Protege lo que más importa.</div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-header"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> Certificado incluido</div>
+          <div class="feature-text">Demuestra lo que has aprendido.</div>
         </div>
       </div>
     </div>
+
+    <!-- FOOTER en todas las pantallas -->
+    <footer>© CiberSeguridadFácil by María Reina. Todos los derechos reservados.</footer>
   </div>
-
-  <!-- COLUMNA DERECHA -->
-  <div class="right-col">
-    <div class="visual-stage">
-      <img src="sergei-paso1.png" alt="Sergei Hacker" class="hero-img active" id="imgPaso0" onerror="this.src='https://via.placeholder.com/600x500/F4F7F9/F4F7F9'">
-      <img src="sergei-paso2.png" alt="Instalando app" class="hero-img" id="imgPaso1" onerror="this.src='https://via.placeholder.com/600x500/F4F7F9/F4F7F9'">
-      <img src="sergei-paso3.png" alt="Acceso preparado" class="hero-img" id="imgPaso2" onerror="this.src='https://via.placeholder.com/600x500/F4F7F9/F4F7F9'">
-      
-      <!-- HUDS Paso 0 -->
-      <div class="hud-overlay active" id="hudPaso0">
-        <div class="floating-card card-escaneo">
-          <div class="fc-header">
-            <svg class="icon-blue" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-            ESCANEO ACTIVO
-          </div>
-          <div class="fc-text">Buscando información<br>pública sobre tu empresa...</div>
-          <div class="fc-dots"><span class="fc-dot active"></span><span class="fc-dot active"></span><span class="fc-dot"></span></div>
-        </div>
-        <div class="floating-card card-fuentes">
-          <div class="fc-header">
-            <svg class="icon-blue" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-            FUENTES ABIERTAS
-          </div>
-          <div class="fc-text">Redes sociales, webs,<br>dominios y más.</div>
-          <div class="fc-dots"><span class="fc-dot active"></span><span class="fc-dot"></span><span class="fc-dot"></span></div>
-        </div>
-        <div class="floating-card card-riesgo">
-          <div class="fc-header">
-            <svg class="icon-blue" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-            RIESGO DETECTADO
-          </div>
-          <div class="fc-text">Cuanta más información<br>tenga, más vulnerable<br>serás.</div>
-          <div class="fc-dots"><span class="fc-dot active"></span><span class="fc-dot active"></span><span class="fc-dot active"></span></div>
-        </div>
-        <div class="floating-card card-huella">
-          <svg class="icon-cyan" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/><path d="M12 6c-3.31 0-6 2.69-6 6 0 1.3.43 2.5 1.15 3.47.38.5.85.91 1.38 1.22.47.27.97.47 1.5.6.53.13 1.07.19 1.62.19.78 0 1.54-.15 2.25-.43.72-.28 1.38-.69 1.95-1.18.57-.5 1.04-1.09 1.39-1.76.35-.67.57-1.4.65-2.16.03-.31.05-.62.05-.94 0-3.31-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z"/></svg>
-          <div style="display:flex; flex-direction:column; gap:2px;">
-            <strong style="font-size:13px; color:var(--text-dark);">Sergéi ya tiene piezas del puzzle.</strong>
-            <span style="font-size:13px; color:var(--primary); font-weight:600;">No le hagas el trabajo fácil.</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- HUDS Paso 1 (Download) -->
-      <div class="hud-overlay" id="hudPaso1">
-        <div class="card-badge badge-privado">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-          Entorno privado
-        </div>
-        <div class="card-badge badge-ligero">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-          Rápido y ligero
-        </div>
-        <div class="card-badge badge-sininstalar">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
-          Sin instalaciones extra
-        </div>
-      </div>
-
-      <!-- HUDS Paso 2 (Final) -->
-      <div class="hud-overlay" id="hudPaso2">
-        <div class="card-badge badge-cifrado">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-          Conexión cifrada
-        </div>
-        <div class="floating-card card-bienhecho">
-          <div class="fc-header" style="margin-bottom:6px;">
-            <svg class="icon-blue" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-            Bien hecho.
-          </div>
-          <div class="fc-text" style="color:var(--primary); font-weight:500;">Ya tienes todo preparado para empezar.</div>
-        </div>
-        <div class="floating-card card-preparado">
-          <svg class="icon-cyan" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/><path d="M12 6c-3.31 0-6 2.69-6 6 0 1.3.43 2.5 1.15 3.47.38.5.85.91 1.38 1.22.47.27.97.47 1.5.6.53.13 1.07.19 1.62.19.78 0 1.54-.15 2.25-.43.72-.28 1.38-.69 1.95-1.18.57-.5 1.04-1.09 1.39-1.76.35-.67.57-1.4.65-2.16.03-.31.05-.62.05-.94 0-3.31-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z"/></svg>
-          <div style="display:flex; flex-direction:column; gap:2px; flex:1;">
-            <strong style="font-size:13px; color:var(--primary); text-transform:uppercase;">Acceso Preparado</strong>
-            <span style="font-size:13px; color:var(--text-gray);">Todo listo para empezar.</span>
-          </div>
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- Cajas características inferiores (Las subimos al hueco negativo para que se metan bajo la imagen difuminada) -->
-    <div class="bottom-features">
-      <div class="feature-item">
-        <div class="feature-header"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> 3 minutos al día</div>
-        <div class="feature-text">Aprendizaje ágil y sin rodeos.</div>
-      </div>
-      <div class="feature-item">
-        <div class="feature-header"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg> Directo en Telegram</div>
-        <div class="feature-text">En tu móvil, donde ya estás.</div>
-      </div>
-      <div class="feature-item">
-        <div class="feature-header"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Para tu empresa</div>
-        <div class="feature-text">Protege lo que más importa.</div>
-      </div>
-      <div class="feature-item">
-        <div class="feature-header"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> Certificado incluido</div>
-        <div class="feature-text">Demuestra lo que has aprendido.</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- FOOTER en todas las pantallas -->
-  <footer>© CiberSeguridadFácil by María Reina. Todos los derechos reservados.</footer>
 </div>
 
 <!-- SCRIPT ORIGINAL -->
