@@ -849,8 +849,7 @@
 
 <!-- SCRIPT ORIGINAL -->
 <script>
-  const WEBHOOK_URL = "https://tu-api-backend.com/registro"; 
-  const CODIGOS_VALIDOS = ["EQUIPO10", "VIPDEMO", "PROMO55", "ALPHA01"];
+  const WEBHOOK_URL = "https://ciberfacil.com/registro";
 
   const COPY = {
     inicio: {
@@ -932,14 +931,12 @@
     const nombreValido = nombre.length >= 2;
     const emailValido = validarEmail(email);
     const telegramSeleccionado = tieneTelegram !== null;
-    const codigoValido = CODIGOS_VALIDOS.includes(codigoIngresado);
 
     marcarError('field-nombre', !nombreValido);
     marcarError('field-email', !emailValido);
-    marcarError('field-codigo', !codigoValido);
     pillError.classList.toggle('show', !telegramSeleccionado);
 
-    if (!nombreValido || !emailValido || !telegramSeleccionado || !codigoValido) return;
+    if (!nombreValido || !emailValido || !telegramSeleccionado) return;
 
     submitBtn.disabled = true;
     submitBtn.textContent = 'Verificando...';
